@@ -10,7 +10,6 @@ class LoadDimensionOperator(BaseOperator):
     def __init__(self,
                  table="",
                  redshift_conn_id="",
-                 aws_credentials_id="",
                  sql_stm="",
                  append_data="",
                  *args, **kwargs):
@@ -18,7 +17,6 @@ class LoadDimensionOperator(BaseOperator):
         super(LoadDimensionOperator, self).__init__(*args, **kwargs)
         self.table = table
         self.redshift_conn_id = redshift_conn_id
-        self.aws_credentials_id = aws_credentials_id
         self.sql_stm = sql_stm
         self.append_data = append_data
 
