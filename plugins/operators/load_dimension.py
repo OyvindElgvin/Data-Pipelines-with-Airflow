@@ -34,11 +34,12 @@ class LoadDimensionOperator(BaseOperator):
             self.log.info("Appending data into {self.table}")
             redshift.run(stm)
         else:
+            self.log.info("Truncating {self.table} table")
             truncate = f""" TRUNCATE {self.table}"""
+            redshift.run(truncate)
+
+            self.log.info("Inserting data into {self.table} table")
             insert = f""" INSERT INTO {self.table}
                           {self.sql_stm}
                       """
-            self.log.info("Truncating {self.table} table")
-            redshift.run(truncate)
-            self.log.info("Inserting data into {self.table} table")
             redshift.run(insert)
