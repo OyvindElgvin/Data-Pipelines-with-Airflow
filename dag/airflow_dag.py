@@ -81,7 +81,6 @@ load_songplays_table = LoadFactOperator(
     dag = dag,
     table = 'songplays',
     redshift_conn_id = "redshift",
-    aws_credentials_id = "aws_credentials",
     sql_stm = SqlQueries.songplay_table_insert,
 )
 
@@ -91,7 +90,6 @@ load_user_dimension_table = LoadDimensionOperator(
     dag=dag,
     table = 'users',
     redshift_conn_id = "redshift",
-    aws_credentials_id = "aws_credentials",
     sql_stm = SqlQueries.user_table_insert,
     append_data = True,
 )
@@ -102,7 +100,6 @@ load_song_dimension_table = LoadDimensionOperator(
     dag=dag,
     table = 'songs',
     redshift_conn_id = "redshift",
-    aws_credentials_id = "aws_credentials",
     sql_stm = SqlQueries.song_table_insert,
     append_data = True,
 )
@@ -113,7 +110,6 @@ load_artist_dimension_table = LoadDimensionOperator(
     dag=dag,
     table = 'artists',
     redshift_conn_id = "redshift",
-    aws_credentials_id = "aws_credentials",
     sql_stm = SqlQueries.artist_table_insert,
     append_data = True,
 )
@@ -124,7 +120,6 @@ load_time_dimension_table = LoadDimensionOperator(
     dag=dag,
     table = 'time',
     redshift_conn_id = "redshift",
-    aws_credentials_id = "aws_credentials",
     sql_stm = SqlQueries.time_table_insert,
     append_data = True,
 )
