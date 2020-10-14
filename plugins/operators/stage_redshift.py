@@ -41,8 +41,8 @@ class StageToRedshiftOperator(BaseOperator):
 
 
     def execute(self, context):
-        self.log.info('Starting StageToRedshiftOperator.')
-        aws_hook = AwsHook(self.aws_credentials_id)
+        self.log.info('Getting credentials for {self.table} table')
+        aws_hook = AwsHook(self.aws_credentials_id) #                    kan disse doppes?
         credentials = aws_hook.get_credentials()
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
