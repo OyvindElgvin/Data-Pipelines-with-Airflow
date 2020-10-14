@@ -9,13 +9,11 @@ from airflow.operators import (StageToRedshiftOperator,
                                DataQualityOperator)
 
 from helpers import SqlQueries
-
+# start airflow with this:
 # /opt/airflow/start.sh
 
 # AWS_KEY = os.environ.get('AWS_KEY')
 # AWS_SECRET = os.environ.get('AWS_SECRET')
-
-# 'start_date': datetime(2019, 1, 12)
 
 
 
@@ -45,7 +43,7 @@ start_operator = DummyOperator(
 )
 
 # operator that gets sql queries from create_tables.sql
-# and create all public tables needed
+# create all public tables needed
 create_tables_task = PostgresOperator(
   task_id="create_tables",
   dag=dag,
@@ -131,24 +129,29 @@ load_time_dimension_table = LoadDimensionOperator(
     append_data = True,
 )
 
+# dictionary with test query and contition
+test_and_result = {"""SELECT sum(case when {{}} is null then 1 else 0 end) as n FROM {{}}""": ' == 0',
+                   "SELECT COUNT({{}}) FROM {{}}": ' > 0'}
+
+# dict with tables and columns
+table_col_dict = {'users': 'userid',
+                   'songs': 'songid',
+                   'artists': 'artistid',
+                   'time': 'start_time'}
+
 # operator plugin that runs a data quality check on the loaded data
-data_checks = [f"""SELECT sum(case when {{}} is null then 1 else 0 end) as number_of_nulls FROM {{}}""",
-              f"SELECT COUNT({{}}) FROM {{}}"]
-
-data_results = [0, 1]
-
 run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
     dag=dag,
-    table_list = ['users', 'songs','artists', 'time'],
-    columns = ['userid', 'songid', 'artistid', 'start_time'],
     redshift_conn_id = "redshift",
-    test_query = data_checks,
-    test_results = data_results,
+    table_col_dict = table_col_dict,
+    test_and_result = test_and_result,
 )
 
 # operator that stops the dag
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
+
+
 
 
 # two lists with parrallell tasks
