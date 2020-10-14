@@ -1,7 +1,7 @@
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
-# mu own imports:
+
 from airflow.contrib.hooks.aws_hook import AwsHook
 
 
@@ -9,9 +9,7 @@ from airflow.contrib.hooks.aws_hook import AwsHook
 class StageToRedshiftOperator(BaseOperator):
     ui_color = '#358140'
     template_fields = ("s3_key",)
-    # Another important requirement of the stage operator is containing
-    # a templated field that allows it to load timestamped files from S3 based
-    # on the execution time and run backfills.
+
     SQL_COPY = """
         COPY {}
         FROM '{}'
