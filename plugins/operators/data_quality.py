@@ -11,14 +11,16 @@ class DataQualityOperator(BaseOperator):
                  redshift_conn_id="",
                  table_list="",
                  columns="",
-                 sql_stm="",
+                 test_querys="",
+                 test_results="",
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
         self.table_list = table_list
         self.columns = columns
         self.redshift_conn_id = redshift_conn_id
-        self.sql_stm = sql_stm
+        self.test_querys = test_querys
+        self.test_results = test_results
 
     def execute(self, context):
         self.log.info('Starting DataQualityOperator')
@@ -29,20 +31,23 @@ class DataQualityOperator(BaseOperator):
             # check if sql statement is correct
             # self.log.info(self.sql_stm.format(col, col, table))
 
-            a_list = redshift_hook.get_records(self.sql_stm.format(col, col, table))
-
-            a_tuple = a_list[0]
-            an_int_fianlly_ffs = a_tuple[0]
-
-            # null test
-            if an_int_fianlly_ffs > 0:
-                raise ValueError(f"""\n----[TEST FAILED] - Data quality check failed.
-                                                       There are {an_int_fianlly_ffs} in column {col} in table {table}""")
-            else:
-                self.log.info(f"""\n----[TEST PASSED] - Data quality on table {table} check passed.
-                                                        {table} had {an_int_fianlly_ffs} nulls""")
+            for query, result in zip(test_querys, test_results):
 
 
+                a_list = redshift_hook.get_records(self.test_querys.format(col, table))
+
+                a_tuple = a_list[0]
+                an_int_fianlly_ffs = a_tuple[0]
+
+                # null test
+                if an_int_fianlly_ffs != self.query_result:
+                    raise ValueError(f"""\n----[TEST FAILED] - Data quality check failed.
+                                                           There are {an_int_fianlly_ffs} in column {col} in table {table}""")
+                else:
+                    self.log.info(f"""\n----[TEST PASSED] - Data quality on table {table} check passed.
+                                                            {table} had {an_int_fianlly_ffs} nulls""")
+
+            """
             # actual records test 1
             records = redshift_hook.get_records(f"SELECT COUNT(*) FROM {table}")
             if len(records) < 1 or len(records[0]) < 1:
@@ -53,3 +58,9 @@ class DataQualityOperator(BaseOperator):
             if num_records < 1:
                 raise ValueError(f"\n----[TEST FAILED] - Data quality check failed. {table} contained 0 rows")
             self.log.info(f"\n----[TEST PASSED] - Data quality on table {table} check passed with {records[0][0]} records")
+
+            """
+
+
+
+        
