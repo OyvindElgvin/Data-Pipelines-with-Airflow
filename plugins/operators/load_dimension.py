@@ -12,6 +12,7 @@ class LoadDimensionOperator(BaseOperator):
                  redshift_conn_id="",
                  aws_credentials_id="",
                  sql_stm="",
+                 append_data="",
                  *args, **kwargs):
 
         super(LoadDimensionOperator, self).__init__(*args, **kwargs)
@@ -19,16 +20,25 @@ class LoadDimensionOperator(BaseOperator):
         self.redshift_conn_id = redshift_conn_id
         self.aws_credentials_id = aws_credentials_id
         self.sql_stm = sql_stm
+        self.append_data = append_data
 
     def execute(self, context):
         self.log.info('Getting credentials for {self.table} table')
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
-        truncate = f"""TRUNCATE public.{self.table}
-                    """
-        insert = f""" INSERT INTO {self.table}
-                      {self.sql_stm}
-                  """
-        self.log.info("Dropping {self.table} table")
-        redshift.run(truncate)
-        redshift.run(insert)
+
+        if self.append_data:
+            stm = f"""INSERT INTO {self.table}
+                       ({self.sql_stm})
+                   """
+            self.log.info("Appending data into {self.table}")
+            redshift.run(stm)
+        else:
+            truncate = f""" TRUNCATE {self.table}"""
+            insert = f""" INSERT INTO {self.table}
+                          {self.sql_stm}
+                      """
+            self.log.info("Truncating {self.table} table")
+            redshift.run(truncate)
+            self.log.info("Inserting data into {self.table} table")
+            redshift.run(insert)
