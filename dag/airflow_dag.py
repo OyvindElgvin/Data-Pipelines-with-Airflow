@@ -34,8 +34,8 @@ default_args = {
 dag = DAG('udac_example_dag',
           default_args = default_args,
           description = 'Load and transform data in Redshift with Airflow',
-          schedule_interval = None, #'@once',     #'0 * * * *'
-          max_active_runs = 1
+          schedule_interval = None, #'@hourly',     #'0 * * * *'
+          max_active_runs = 1 # denne kan vel sloyfes?
         )
 
 # this just starts the dag
