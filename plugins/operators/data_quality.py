@@ -9,57 +9,39 @@ class DataQualityOperator(BaseOperator):
     @apply_defaults
     def __init__(self,
                  redshift_conn_id="",
-                 table_list="",
-                 columns="",
-                 test_querys="",
-                 test_results="",
+                 table_col_dict={}
+                 test_and_result={}
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
-        self.table_list = table_list
-        self.columns = columns
         self.redshift_conn_id = redshift_conn_id
-        self.test_querys = test_querys
-        self.test_results = test_results
+        self.table_col_dict = table_col_dict
+        self.test_and_result = test_and_result
 
     def execute(self, context):
-        self.log.info('Starting DataQualityOperator')
+        self.log.info('Getting credentials')
         redshift_hook = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
-        for table, col in zip(self.table_list, self.columns):
+        self.log.info('Starting tests')
+        # for each set of table and col
+        for table, col in self.table_col_dict.items():
 
-            # check if sql statement is correct
-            # self.log.info(self.sql_stm.format(col, col, table))
+            # run every test query in dict
+            for query, expected in self.test_and_result.items():
 
-            for query, result in zip(test_querys, test_results):
+                a_list = redshift_hook.get_records(query.format(col, table))
+                result = a_list[0][0]
+                #self.log.info(f"Running test on {tabel} table and {col} column with query:")
+                #self.log.info(query.format(col, table))
+                #self.log.info(f"Result = {result}, expected {expected}")
 
-
-                a_list = redshift_hook.get_records(self.test_querys.format(col, table))
-
-                a_tuple = a_list[0]
-                an_int_fianlly_ffs = a_tuple[0]
-
-                # null test
-                if an_int_fianlly_ffs != self.query_result:
-                    raise ValueError(f"""\n----[TEST FAILED] - Data quality check failed.
-                                                           There are {an_int_fianlly_ffs} in column {col} in table {table}""")
+                if eval(result expected):
+                    self.log.info(f"""\n--------------[TEST PASSED] - Data quality on {table} table is good.""")
                 else:
-                    self.log.info(f"""\n----[TEST PASSED] - Data quality on table {table} check passed.
-                                                            {table} had {an_int_fianlly_ffs} nulls""")
+                    raise ValueError(f"""\n--------------[TEST FAILED] - Data quality check failed on {table} table column {col},
+                                                           \nExpected {expected}, but got {result}""")
 
-            """
-            # actual records test 1
-            records = redshift_hook.get_records(f"SELECT COUNT(*) FROM {table}")
-            if len(records) < 1 or len(records[0]) < 1:
-                raise ValueError(f"\n----[TEST FAILED] - Data quality check failed. {table} returned no results")
 
-            # actual records test 2
-            num_records = records[0][0]
-            if num_records < 1:
-                raise ValueError(f"\n----[TEST FAILED] - Data quality check failed. {table} contained 0 rows")
-            self.log.info(f"\n----[TEST PASSED] - Data quality on table {table} check passed with {records[0][0]} records")
-
-            """
 
 
 
