@@ -132,13 +132,19 @@ load_time_dimension_table = LoadDimensionOperator(
 )
 
 # operator plugin that runs a data quality check on the loaded data
+data_checks = [f"""SELECT sum(case when {{}} is null then 1 else 0 end) as number_of_nulls FROM {{}}""",
+              f"SELECT COUNT({{}}) FROM {{}}"]
+
+data_results = [0, 1]
+
 run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
     dag=dag,
-    table_list = ['users', 'artists'],
-    columns = ['userid', 'artistid'],
+    table_list = ['users', 'songs','artists', 'time'],
+    columns = ['userid', 'songid', 'artistid', 'start_time'],
     redshift_conn_id = "redshift",
-    sql_stm = f"""SELECT sum(case when {{}} is null then 1 else 0 end) as {{}} FROM {{}}""",
+    test_query = data_checks,
+    test_results = data_results,
 )
 
 # operator that stops the dag
