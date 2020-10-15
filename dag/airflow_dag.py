@@ -22,7 +22,7 @@ default_args = {
     'owner': 'udacity',
     'start_date': datetime.utcnow(),
     'depends_on_past': False,
-    'retries': 0, #3,
+    'retries': 3,
     'retry_delay': timedelta(minutes=5),
     'catchup': False,
     'email_on_retry': False,
@@ -33,8 +33,8 @@ default_args = {
 dag = DAG('udac_example_dag',
           default_args = default_args,
           description = 'Load and transform data in Redshift with Airflow',
-          schedule_interval = None, #'0 * * * *'
-          max_active_runs = 1, # denne kan vel sloyfes?
+          schedule_interval = '0 * * * *',
+          max_active_runs = 1,
         )
 
 # this just starts the dag
@@ -72,7 +72,7 @@ stage_songs_to_redshift = StageToRedshiftOperator(
     redshift_conn_id = "redshift",
     aws_credentials_id = "aws_credentials",
     s3_bucket = "udacity-dend",
-    s3_key = "song_data/A/A/A/",   #   A/A/A/   */*/*/
+    s3_key = "song_data/",   #   test sample: song_data/A/A/A/      whole data set: song_data/
     json = 'auto'
 )
 
@@ -125,15 +125,16 @@ load_time_dimension_table = LoadDimensionOperator(
     append_data = True,
 )
 
-# dictionary with test querys and contitions
-test_and_result = {"""SELECT sum(case when {} is null then 1 else 0 end) as n FROM {}""": 0,
-                   "SELECT COUNT({}) FROM {}": 0}
+# dictionary with test querys and results
+test_and_result = {"""SELECT COUNT({}) FROM {} WHERE {} IS NULL""": 0,
+                   "SELECT COUNT({}) FROM {} WHERE {} IS NOT NULL": 0}
 
-# set the condition for the corresponding test query in 'test_and_result'
-condition_dict = {0: '==',
-                  1: '>'}
+# set the comparison operations for the corresponding test query in 'test_and_result'
+# available comparison operations expressions for automation are '==', '<', '>'. See data_quality.py for clearification
+comparison_operation_list = ['==','>']
 
 # dict with tables and columns
+# could also check more columns in each table
 table_col_dict = {'users': 'userid',
                    'songs': 'songid',
                    'artists': 'artistid',
@@ -146,7 +147,7 @@ run_quality_checks = DataQualityOperator(
     redshift_conn_id = "redshift",
     table_col_dict = table_col_dict,
     test_and_result = test_and_result,
-    condition_dict = condition_dict,
+    comparison_operation_list = comparison_operation_list,
 )
 
 # operator that stops the dag

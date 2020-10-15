@@ -1,12 +1,24 @@
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
-
 from airflow.contrib.hooks.aws_hook import AwsHook
 
 
-
 class StageToRedshiftOperator(BaseOperator):
+    """
+    Operator plugin that COPYs from S3 to Redshift
+
+
+    Parameters:
+        redshift_conn_id -      credentials to redshift
+        aws_credentials_id -    credentials to aws
+        table -                 target table
+        s3_bucket -             s3 bucket
+        s3_key -                s3 address
+        json -                  set columns
+    """
+
+
     ui_color = '#358140'
     template_fields = ("s3_key",)
 
@@ -42,7 +54,7 @@ class StageToRedshiftOperator(BaseOperator):
 
     def execute(self, context):
         self.log.info('Getting credentials for {self.table} table')
-        aws_hook = AwsHook(self.aws_credentials_id) #                    kan disse doppes?
+        aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
