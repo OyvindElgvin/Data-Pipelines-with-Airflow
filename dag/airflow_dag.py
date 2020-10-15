@@ -9,6 +9,7 @@ from airflow.operators import (StageToRedshiftOperator,
                                DataQualityOperator)
 
 from helpers import SqlQueries
+
 # start airflow with this:
 # /opt/airflow/start.sh
 
@@ -32,8 +33,8 @@ default_args = {
 dag = DAG('udac_example_dag',
           default_args = default_args,
           description = 'Load and transform data in Redshift with Airflow',
-          schedule_interval = None, #'@hourly',     #'0 * * * *'
-          max_active_runs = 1 # denne kan vel sloyfes?
+          schedule_interval = None, #'0 * * * *'
+          max_active_runs = 1, # denne kan vel sloyfes?
         )
 
 # this just starts the dag
@@ -124,9 +125,13 @@ load_time_dimension_table = LoadDimensionOperator(
     append_data = True,
 )
 
-# dictionary with test query and contition
-test_and_result = {"""SELECT sum(case when {{}} is null then 1 else 0 end) as n FROM {{}}""": ' == 0',
-                   "SELECT COUNT({{}}) FROM {{}}": ' > 0'}
+# dictionary with test querys and contitions
+test_and_result = {"""SELECT sum(case when {} is null then 1 else 0 end) as n FROM {}""": 0,
+                   "SELECT COUNT({}) FROM {}": 0}
+
+# set the condition for the corresponding test query in 'test_and_result'
+condition_dict = {0: '==',
+                  1: '>'}
 
 # dict with tables and columns
 table_col_dict = {'users': 'userid',
@@ -141,6 +146,7 @@ run_quality_checks = DataQualityOperator(
     redshift_conn_id = "redshift",
     table_col_dict = table_col_dict,
     test_and_result = test_and_result,
+    condition_dict = condition_dict,
 )
 
 # operator that stops the dag
