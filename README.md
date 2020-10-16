@@ -23,7 +23,7 @@ To complete the ETL, custom operators is created to perform tasks such as stagin
 Project Data Pipelines with Airflow
 ├── dags
 │   ├── airflow_dag.py				# DAG
-│   └── create_tables.sql           # generates all tables
+│   └── create_tables.sql			# Generate all tables
 │
 ├── img
 │	├── ETL.png						# image
