@@ -22,25 +22,25 @@ To complete the ETL, custom operators is created to perform tasks such as stagin
 ```
 Project Data Pipelines with Airflow
 ├── dags
-│   ├── airflow_dag.py				# DAG
-│   └── create_tables.sql			# Generate all tables
+│   ├── airflow_dag.py			# DAG
+│   └── create_tables.sql		# Generate all tables
 │
 ├── img
-│	├── ETL.png						# image
-│   ├── aws_cred.png				# image
-│   └── redshift.png				# image
+│	├── ETL.png					# image
+│   ├── aws_cred.png			# image
+│   └── redshift.png			# image
 │
 ├── plugins            
 │   ├── helpers
-│   │   └── sql_queries.py			# All sql queries needed
+│   │   └── sql_queries.py		# All sql queries needed
 │   │
 │   └── operators
-│       ├── data_quality.py			# DataQualityOperator
-│       ├── load_dimension.py		# LoadDimensionOperator
-│       ├── load_fact.py			# LoadFactOperator
-│       └── stage_redshift.py		# StageToRedshiftOperator
+│       ├── data_quality.py		# DataQualityOperator
+│       ├── load_dimension.py	# LoadDimensionOperator
+│       ├── load_fact.py		# LoadFactOperator
+│       └── stage_redshift.py	# StageToRedshiftOperator
 │
-├── CreateRedshiftCluster.ipynb		# Jupyter Notebook create cluster
+├── CreateRedshiftCluster.ipynb	# Jupyter Notebook create cluster
 │
 └── README.md						# A README
 ```
