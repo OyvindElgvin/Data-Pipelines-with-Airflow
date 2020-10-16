@@ -54,7 +54,12 @@ Project Data Pipelines with Airflow
 
 
 ## Getting Started
-To run the ETL you first need to create a Redshift cluster on AWS. The Jupyter notebook will easily do that
-create cluster  
-Connections in Airflow  
+To run the ETL you first need to create a Redshift cluster on AWS with jeg CreateRedshiftCluster jupyter notebook. The notebook generates the cluster and creates a new IAM role and connects to the cluster.
+
+After the Redshift cluster on AWS is up and running credentials needs to be stored in Airflow. This is done in the 'Admin' -> 'Connections' tab. Both AWS credentials and Redshift credentials needs to be stored.
+
+![aws_cred](img/aws_cred.png)
+![aws_cred](img/redshift.png)
+
+
 run airflow_dag.py in Airflow
