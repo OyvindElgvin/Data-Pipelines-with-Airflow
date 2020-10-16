@@ -1,4 +1,4 @@
-# Work in progress
+
 # Project Data Pipelines with Airflow
 
 
@@ -14,12 +14,15 @@ To complete the ETL, custom operators is created to perform tasks such as stagin
 
 ![Dag in Airflow](img/ETL.png)
 
+
+## Project Structure
+
 ```
 Project Data Pipelines with Airflow
 ├── README.md
 │       
 ├── dags
-│   ├── airflow_dag.py 
+│   ├── airflow_dag.py
 │   └── create_tables.sql           
 │
 └── plugins            
@@ -43,7 +46,9 @@ Project Data Pipelines with Airflow
 
 
 ## Requirements
-list
+* Python3
+* Airflow
+* AWS account
 
 ## Getting Started
 create cluster  
