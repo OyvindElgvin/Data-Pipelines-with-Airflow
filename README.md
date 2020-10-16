@@ -26,7 +26,7 @@ Project Data Pipelines with Airflow
 │   └── create_tables.sql		# Generate all tables
 │
 ├── img
-│   ├── ETL.png					# image
+│   ├── ETL.png                 # image
 │   ├── aws_cred.png			# image
 │   └── redshift.png			# image
 │
