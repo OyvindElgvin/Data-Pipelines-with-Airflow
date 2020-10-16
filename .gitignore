@@ -1,1 +1,3 @@
 data_lake.cfg
+.gitattributes
+.DS_Store
