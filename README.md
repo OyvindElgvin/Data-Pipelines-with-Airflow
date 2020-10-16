@@ -3,8 +3,10 @@
 
 
 ## Table of Content
-linker
-
+1. [Introduction](#Introduction)
+2. [Project Structure](#Project_Structure)
+3. [Requirements](#Requirements)
+4. [Getting Started](Getting_Started)
 
 ## Introduction
 The goal for this project is to set up an ETL pipeline between
