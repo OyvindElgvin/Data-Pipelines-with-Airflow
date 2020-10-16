@@ -1,13 +1,6 @@
 
 # Project Data Pipelines with Airflow
 
-
-## Table of Content
-1. [Introduction](#Introduction)
-2. [Project Structure](#Project_Structure)
-3. [Requirements](#Requirements)
-4. [Getting Started](Getting_Started)
-
 ## Introduction
 The goal for this project is to set up an ETL pipeline between
 S3 and AWS Redshift, creating a Data Warehouse for the company, Sparkify. Their data resides in S3, in a directory of JSON logs of user activity on the app, as well as a directory with JSON metadata on the songs from their streaming app.
