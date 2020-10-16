@@ -12,7 +12,7 @@
 The goal for this project is to set up an ETL pipeline between
 S3 and AWS Redshift, creating a Data Warehouse for the company, Sparkify. Their data resides in S3, in a directory of JSON logs of user activity on the app, as well as a directory with JSON metadata on the songs from their streaming app.
 
-To complete the ETL, custom operators is created to perform tasks such as staging the data, filling the data warehouse, and running checks on the data as the final step.
+To complete the ETL, custom operators is created to perform tasks such as staging the data, filling the data warehouse, and running checks on the data as the final step. The DAG will run every hour and retry three times if it fails.
 
 ![Dag in Airflow](img/ETL.png)
 
@@ -26,7 +26,7 @@ Project Data Pipelines with Airflow
 │   └── create_tables.sql		# Generate all tables
 │
 ├── img
-│	├── ETL.png					# image
+│   ├── ETL.png					# image
 │   ├── aws_cred.png			# image
 │   └── redshift.png			# image
 │
@@ -42,7 +42,7 @@ Project Data Pipelines with Airflow
 │
 ├── CreateRedshiftCluster.ipynb	# Jupyter Notebook create cluster
 │
-└── README.md						# A README
+└── README.md					# A README
 ```
 
 ## Requirements
@@ -62,4 +62,4 @@ After the Redshift cluster on AWS is up and running credentials needs to be stor
 ![aws_cred](img/redshift.png)
 
 
-run airflow_dag.py in Airflow
+Set the DAG to on and trigger it with the play button.
