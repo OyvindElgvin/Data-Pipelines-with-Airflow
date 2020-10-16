@@ -14,9 +14,33 @@ To complete the ETL, custom operators is created to perform tasks such as stagin
 
 ![Dag in Airflow](img/ETL.png)
 
-'''
-some code here
-'''
+```
+Project Data Pipelines with Airflow
+├── README.md
+│       
+├── dags
+│   ├── airflow_dag.py 
+│   └── create_tables.sql           
+│
+└── plugins            
+    ├── __init__.py    
+    │
+    ├── helpers
+    │   ├── __init__.py
+    │   └── sql_queries.py
+    │
+    └── operators
+        ├── __init__.py
+        ├── data_quality.py
+        ├── load_dimension.py
+        ├── load_fact.py
+        └── stage_redshift.py
+
+
+```
+
+
+
 
 ## Requirements
 list
