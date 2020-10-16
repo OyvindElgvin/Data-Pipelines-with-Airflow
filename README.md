@@ -21,36 +21,40 @@ To complete the ETL, custom operators is created to perform tasks such as stagin
 
 ```
 Project Data Pipelines with Airflow
-├── README.md
-│       
 ├── dags
-│   ├── airflow_dag.py
-│   └── create_tables.sql           
+│   ├── airflow_dag.py				# DAG
+│   └── create_tables.sql           # generates all tables
 │
-└── plugins            
-    ├── __init__.py    
-    │
-    ├── helpers
-    │   ├── __init__.py
-    │   └── sql_queries.py
-    │
-    └── operators
-        ├── __init__.py
-        ├── data_quality.py
-        ├── load_dimension.py
-        ├── load_fact.py
-        └── stage_redshift.py
+├── img
+│	├── ETL.png						# image
+│   ├── aws_cred.png				# image
+│   └── redshift.png				# image
+│
+├── plugins            
+│   ├── helpers
+│   │   └── sql_queries.py			# All sql queries needed
+│   │
+│   └── operators
+│       ├── data_quality.py			# DataQualityOperator
+│       ├── load_dimension.py		# LoadDimensionOperator
+│       ├── load_fact.py			# LoadFactOperator
+│       └── stage_redshift.py		# StageToRedshiftOperator
+│
+├── CreateRedshiftCluster.ipynb		# Jupyter Notebook create cluster
+│
+└── README.md						# A README
 ```
 
 ## Requirements
-
 * Apache Airflow
 * AWS account
 * Python3
 * boto3
 * psycopg2
 
+
 ## Getting Started
+To run the ETL you first need to create a Redshift cluster on AWS. The Jupyter notebook will easily do that
 create cluster  
 Connections in Airflow  
 run airflow_dag.py in Airflow
