@@ -38,17 +38,15 @@ Project Data Pipelines with Airflow
         ├── load_dimension.py
         ├── load_fact.py
         └── stage_redshift.py
-
-
 ```
 
-
-
-
 ## Requirements
-* Python3
-* Airflow
+
+* Apache Airflow
 * AWS account
+* Python3
+* boto3
+* psycopg2
 
 ## Getting Started
 create cluster  
